@@ -1,0 +1,232 @@
+openapi: 3.0.0
+info:
+  title: IPFS Node Management
+  description: A simplified version of IPFS Desktop
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000/
+    description: Home Page
+paths:
+  /node/start:
+    get:
+      summary: Starts IPFS Node.
+      description: Starts IPFS Node.
+      responses:
+        "200":
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true , nodeInfo: {}}
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /node/stop:
+    get:
+      summary: Shut IPFS Node down.
+      description: Stops IPFS Node from functioning.
+      responses:
+        "200":
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/upload/single:
+    post:
+      summary: Upload a file
+      description: Upload a file to IPFS Network
+      consumes:
+      - multipart/form-data
+      parameters:
+       - in: formData
+           name: file
+           type: file
+           required: true
+           description: The file to upload.
+      responses:
+        "201":
+          description: file uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true, CID: QmbcdansvjcQFQy3gSZFAy4fEKWWSe2YNVFrSqDj2YaMgt }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/upload/multiple:
+    post:
+      summary: Upload multiple files into a directory
+      description: Upload multiple file to IPFS Network grouped into a immutable directory
+      consumes:
+      - multipart/form-data
+      parameters:
+       - in: formData
+           name: file
+           type: file
+           description: files to upload.
+      responses:
+        "201":
+          description: files uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true , result: '[Information of files uploaded]'}
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/info/{cid}:
+    get:
+      summary: Get metadata
+      description: Get the CID's metadata (CID can be a directory)
+      parameters:
+       - in: path
+           name: cid
+           type: string
+           description: CID of the content
+      responses:
+        "200":
+          description: file uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true, fileinfo : {}  }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/download/{cid}:
+    get:
+      summary: Get a specific file content
+      description: Download a file from IPFS Network (Local/Remote)
+      parameters:
+       - in: path
+           name: cid
+           type: string
+           description: CID of the file to be downloaded
+      responses:
+        "200":
+          description: file downloaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true, fileinfo :{}  }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/rename/{cid}:
+    post:
+      summary: Change specific file name using CID
+      description: Change file name locally
+      parameters:
+       - in: formData
+           name: newName
+           type: string
+           description: The new name for a file
+      responses:
+        "200":
+          description: file name changed
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true, fileInfo : 'new name'  }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/delete/{cid}:
+    get:
+      summary: Delete a specific file using CID
+      description: delete a file locally
+      parameters:
+       - in: path
+           name: cid
+           type: string
+           description: Content Identifier of desired file to delete
+      responses:
+        "200":
+          description: file deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
+
+  /file/list:
+    get:
+      summary: List all files
+      description: list of all files uploaded by you
+      responses:
+        "200":
+          description: files listed
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: true, listOfFiles :[]  }
+
+        "500":
+          description: Error Happened
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { isSucceeded: false, message: 'error message' }
